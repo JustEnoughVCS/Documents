@@ -1,0 +1,63 @@
+#
+#
+#    ████████                ████████
+#  ██▒▒▒▒▒▒▒▒██            ██▒▒▒▒▒▒▒▒██
+#  ██        ▒▒██        ██▒▒        ██    █████  ██    ██  ██    ██
+#  ██          ▒▒████████▒▒          ██    ▒▒▒██  ██    ██  ██    ██
+#  ██            ▒▒▒▒▒▒▒▒            ██       ██  ██    ██  ██    ██
+#  ██                                ██       ██  ██    ██  ██    ██
+#  ██                                ██       ██  ██    ██  ██    ██
+#  ██         ████      ████         ██       ██  ▒██  ██▒  ▒██  ██▒
+#  ██         ████      ████         ██    █  ██   ██  ██    ██  ██
+#  ██         ████      ████         ██    █  ██   ▒████▒    ▒████▒
+#  ██         ▒▒▒▒      ▒▒▒▒   █     ██    ▒████    ▒██▒      ▒██▒
+#  ██                         ██     ██     ▒▒▒▒     ▒▒        ▒▒
+#  ██                ██████████      ██
+#  ██                                ██
+#    ████████████████████████████████     JustEnoughVCS Vault Profile
+#    ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒     ===========================
+#
+#
+
+# Vault "{vault_name}" created by {user_name} ({date_format})
+
+#########################
+### Base Informations ###
+#########################
+name = "{vault_name}"
+uuid = "{vault_uuid}"
+
+# Administrator list, indicating members who can switch identity to 'host'
+admin = []
+
+[profile]
+
+####################
+### Connectivity ###
+####################
+
+# Bind address: 127.0.0.1 for localhost only, 0.0.0.0 to allow remote access
+bind = "127.0.0.1" # (fallback: "127.0.0.1")
+
+# Bind port
+port = 25331 # (fallback: 25331)
+
+# Enable LAN discovery: clients can discover this service on the local network
+lan_discovery = "enable" # (enable, disable, fallback: disable)
+
+#############
+### Debug ###
+#############
+
+# Enable logger
+logger = "yes" # (yes, no, fallback: no)
+
+# Logger output level
+logger_level = "info" # (debug, trace, info, fallback: info)
+
+#################################
+### Authentication & Security ###
+#################################
+
+# Authentication mode
+auth_mode = "key" # (key, password, noauth, fallback: password)
