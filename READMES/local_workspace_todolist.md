@@ -25,13 +25,14 @@ We've prepared a checklist to help you set up your local workspace in order:
 
   ```bash
   # Register your account
-  jv account + YOUR_NAME
-
+  # Use `--keygen` to generate private key
+  jv account + YOUR_NAME --keygen
+  
   # Set current workspace to use your account
   jv as YOUR_NAME
   ```
 
-- [ ] **Register keys**
+- [ ] **Register keys** (Manual)
 
   To connect to the server, you'll need to generate asymmetric keys for your account.
 
@@ -40,9 +41,11 @@ We've prepared a checklist to help you set up your local workspace in order:
   ```bash
   # Generate private key
   openssl genpkey -algorithm ed25519 -out YOUR_NAME_PRIVATE.pem
-
+  
   # Generate public key from private key
   openssl pkey -in YOUR_NAME_PRIVATE.pem -pubout -out YOUR_NAME_PUBLIC.pem
+  # If you registered private key, you can
+  # jv account genpub YOUR_NAME ./ # Generate public key here
   ```
 
   After generating the key files, register them to your account:
@@ -50,7 +53,7 @@ We've prepared a checklist to help you set up your local workspace in order:
   ```bash
   # Move private key to key registry
   jv account mvkey YOUR_NAME YOUR_NAME_PRIVATE.pem
-
+  
   # (Optional) List all accounts to verify private key registration
   # jv accounts
   ```
@@ -67,6 +70,21 @@ We've prepared a checklist to help you set up your local workspace in order:
   # Connect workspace to upstream repository (no confirmation)
   # jv direct <UPSTREAM_ADDR> -C
   ```
+
+  > ![TIP]
+  >
+  > You can use the following command to login to the upstream more easily.
+
+  ```bash
+  jv login <YOUR_ACCOUNT> <UPSTREAM_ADDR> -C
+  # =
+  # jv as <YOUR_ACCOUNT>
+  # jv direct <UPSTREAM_ADDR> -C
+  # jv update
+  # rm SETUP.md # Delete this document to keep workspace clean
+  ```
+
+  
 
 - [ ] **Create or use a sheet**
 
