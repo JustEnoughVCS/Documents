@@ -1,130 +1,104 @@
-# Get Started - Local Workspace
+# Setup a Workspace
 
-This directory is a **Local Workspace** managed by `JustEnoughVCS`. All files and subdirectories within this scope can be version-controlled using the `JustEnoughVCS` CLI or GUI tools, with the following exceptions:
+You have created an empty local **Workspace** using `jv create` or `jv init`.
 
-- The `.jv` directory
-- Any files or directories excluded via `IGNORE_RULES.toml`
+At this point, the workspace exists only as a local structure.
+It is **not yet associated with any identity or upstream Vault**.
 
-> [!NOTE]
->
-> Files in this workspace will be uploaded to the upstream server. Please ensure you fully trust this server before proceeding.
+Follow the steps below to complete the initial setup.
 
-
-
-## TODO LIST
-
-We've prepared a checklist to help you set up your local workspace in order:
+## Account Setup
 
 > [!TIP]
+> If you have already registered an account on this machine, you can skip this section.
+
+An account represents **this machine acting on your behalf**.
+You can create an account and generate a private key using the following commands.
+
+```bash
+# Make sure OpenSSL is installed on your system.
+# Create an account and automatically generate a private key using OpenSSL.
+jv account add pan --keygen
+
+# If you already have a private key, you can associate it with an account.
+jv account movekey pan ./your_private_key.pem
+```
+
+After creating the private key, generate the corresponding public key.
+This also requires `OpenSSL` support.
+
+```bash
+# Generate the public key in the current directory.
+jv account genpub pan ./
+```
+
+**Send the generated public key file to a Host of the upstream Vault.**
+Only after the key is registered by the Vault can this workspace authenticate.
+
+## Login
+
+> In the following example, we assume:
 >
-> The following assumes you're using the command line. If you're using the GUI, you can skip these setup steps.
+> * the account name is `pan`
+> * the upstream Vault address is `127.0.0.1`
 
-- [ ] **Set up account**
+Navigate to the workspace directory (the directory containing this file), then run:
 
-  First, register your account on your local machine:
+```bash
+# Log in as pan to the upstream Vault at 127.0.0.1
+# -C skips confirmation prompts
+jv login pan 127.0.0.1 -C
+```
 
-  ```bash
-  # Register your account
-  # Use `--keygen` to generate private key
-  jv account + YOUR_NAME --keygen
-  
-  # Set current workspace to use your account
-  jv as YOUR_NAME
-  ```
+This command performs the following steps internally:
 
-- [ ] **Register keys** (Manual)
+```bash
+jv account as pan        # Bind the workspace to account pan
+jv direct 127.0.0.1 -C   # Set the upstream Vault address
+jv update                # Fetch initial structure and metadata from upstream
+rm SETUP.md              # Remove this setup document
+```
 
-  To connect to the server, you'll need to generate asymmetric keys for your account.
+After login, the workspace becomes a **live participant** connected to the upstream Vault.
 
-  You can use `openssl` to create keys, for example an ED25519 key:
+## Completion
 
-  ```bash
-  # Generate private key
-  openssl genpkey -algorithm ed25519 -out YOUR_NAME_PRIVATE.pem
-  
-  # Generate public key from private key
-  openssl pkey -in YOUR_NAME_PRIVATE.pem -pubout -out YOUR_NAME_PUBLIC.pem
-  # If you registered private key, you can
-  # jv account genpub YOUR_NAME ./ # Generate public key here
-  ```
+At this point, the workspace is fully set up:
 
-  After generating the key files, register them to your account:
+* An account identity is bound locally
+* An upstream Vault is configured
+* Initial data has been synchronized
 
-  ```bash
-  # Move private key to key registry
-  jv account mvkey YOUR_NAME YOUR_NAME_PRIVATE.pem
-  
-  # (Optional) List all accounts to verify private key registration
-  # jv accounts
-  ```
+Normally, `jv login` removes this file automatically.
+If the file still exists due to a deletion failure, please remove it manually to keep the workspace clean.
 
-  You should still have a public key file (called `YOUR_NAME_PUBLIC.pem` in this example) - provide this to the upstream repository administrator.
+Once this file is gone, the workspace is considered **ready for daily use**.
 
-- [ ] **Provide public key to upstream repository administrator**
+## Why does this file delete itself?
 
-- [ ] **Connect to server**
+A freshly created JVCS workspace is considered **clean** only when no sheets are in use and no unexplained files exist.
 
-  Once the administrator registers your public key, you can connect to the server:
+During the initial setup phase, this `SETUP.md` file is the only allowed exception.
+It exists solely to guide the workspace into a connected and explainable state.
 
-  ```bash
-  # Connect workspace to upstream repository (no confirmation)
-  # jv direct <UPSTREAM_ADDR> -C
-  ```
+Once the workspace is connected to an upstream Vault and enters normal operation,
+every file in the workspace is expected to be **explainable by structure**.
 
-  > ![TIP]
-  >
-  > You can use the following command to login to the upstream more easily.
+If this setup file remains:
 
-  ```bash
-  jv login <YOUR_ACCOUNT> <UPSTREAM_ADDR> -C
-  # =
-  # jv as <YOUR_ACCOUNT>
-  # jv direct <UPSTREAM_ADDR> -C
-  # jv update
-  # rm SETUP.md # Delete this document to keep workspace clean
-  ```
+* it becomes an unexplained local file
+* `JustEnoughVCS` cannot determine which sheet it belongs to
+* and any subsequent `jv use` operation would be ambiguous
 
-  
+To prevent this ambiguity, JVCS enforces a strict rule:
 
-- [ ] **Create or use a sheet**
+**A workspace with unexplained files is not allowed to enter active use.**
 
-  First, update your local information:
+Deleting `SETUP.md` marks the end of the setup phase and confirms that:
 
-  ```bash
-  jv u # Update local information
-  ```
+* all remaining files are intentional
+* their placement can be explained
+* and the workspace is ready to participate in structure-driven operations
 
-  If you've worked in this upstream repository before, you should see your sheets:
-
-  ```bash
-  jv sheets # View all sheets
-  ```
-
-  If you don't have a sheet, create one:
-
-  ```bash
-  jv make your_sheet # Create sheet
-  jv u # Sync after upstream changes
-  ```
-
-- [ ] **Final steps**
-
-  After completing the above steps, your workspace is connected to the upstream repository.
-
-  Now delete this document to keep your workspace clean, and use this command to start working:
-
-  ```bash
-  jv use your_sheet # Use the sheet you just created to begin work
-  ```
-
-
-
-## Support
-
-- **Permission or access issues?** → Contact your server administrator
-- **Tooling problems or bugs?** → Reach out to the development team via [GitHub Issues](https://github.com/JustEnoughVCS/VersionControl/issues)
-- **Documentation**: Visit our repository for full documentation
-
-------
-
-*Thank you for using JustEnoughVCS!*
+This is why the setup document removes itself.
+It is not cleanup — it is a boundary.
