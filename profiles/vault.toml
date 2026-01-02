@@ -28,7 +28,7 @@ name = "{vault_name}"
 uuid = "{vault_uuid}"
 
 # Administrator list, indicating members who can switch identity to 'host'
-admin = []
+hosts = []
 
 [profile]
 
