@@ -1,2 +1,1 @@
-# Documents
-Documents of JustEnoughVCS
+# JustEnoughVCS
